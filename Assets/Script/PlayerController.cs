@@ -35,28 +35,29 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	float fUpdateinteval = 0.1f;			//饥饿心情的变化间隔；
-	float fUpdateintevalExp = 1.0f;			//成长的变化间隔；
+	float fUpdateinteval = 0.01f;			//饥饿心情的变化间隔；
+	float fUpdateintevalExp = 0.02f;		//成长的变化间隔；
 	float toIdleTime = 10.0f; 				//切换时段待机的时长；
 	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
 	int nor = 0;							//用于随机播放待机动作；
 
-	int iFoodValue = 10;					//每次喂食的饥饿度变化；
-	int iHappyValue = 10;					//每次点击的心情值变化；
+	int iFoodValue = 5;						//每次喂食的饥饿度变化；
+	int iHappyValue = 5;					//每次点击的心情值变化；
 
 
 	Vector3 targetPos;						//移动目标点
 	float speed = 0.03f;					//移动速度
 	bool bMoving = false;					//是否处于移动状态，避免移动状态下反复切换为自己
 
+	public Text levelnum;					//等级UI
 	public Text foodnum;					//食物量UI
 	public Text expnum;						//成长值UI
 	public Text hungrynum;					//饱食度UI  代码里为饥饿度，显示的时候用100去减
 	public Text happynum;					//心情值
-	public Image qbg;
-	public Text ques;
-	public Text answ;
-	public InputField answfield;
+	public Image qbg;						//问答界面
+	public Text ques;						//问题文本
+	public Text answ;						//答题文本
+	public InputField answfield;			//输入框
 
 	public bool bInit = false;
 
@@ -149,7 +150,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] < 50) {
 			Attrs [(int)enAttribute.Exp] += nExp;
-			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10) {
+			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] + 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
 			}
 		}
@@ -193,9 +194,10 @@ public class PlayerController : MonoBehaviour {
 	//刷新UI
 	void UpdateUI() {
 		foodnum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Food]);
-		expnum.text = string.Format("{0:D4}", Attrs [(int)enAttribute.Exp]);
-		hungrynum.text = string.Format("{0:D3}", 100 - Attrs [(int)enAttribute.Hungry]);
-		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]);
+		levelnum.text = Attrs [(int)enAttribute.Level].ToString () + " 级";
+		expnum.text = string.Format ("{0:N0}", Attrs [(int)enAttribute.Exp] - Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10) + " / " + string.Format("{0:N0}",Attrs [(int)enAttribute.Level] * 10);
+		hungrynum.text = string.Format("{0:D3}", 100 - Attrs [(int)enAttribute.Hungry]) + " / 100";
+		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]) + " / 100";
 	}
 
 
@@ -217,6 +219,8 @@ public class PlayerController : MonoBehaviour {
 
 	//刷新待机动作
 	void UpdateIdle(){
+		ani.SetBool("bSad",(Attrs [(int)enAttribute.Happy] < 30));
+		ani.SetBool("bHungry",(Attrs [(int)enAttribute.Hungry] >= 70 ));
 		if (Attrs [(int)enAttribute.Happy] < 30 && !ani.GetCurrentAnimatorStateInfo (0).IsTag ("sad")) {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 2));
 			ani.SetTrigger ("toBeSad");
@@ -234,12 +238,14 @@ public class PlayerController : MonoBehaviour {
 				return;
 			}
 			if (nor == 0) {
-				nor = UnityEngine.Random.Range (3, (int)toIdleTime+5);
+				nor = UnityEngine.Random.Range (3, (int) toIdleTime + 3);
+				Debug.Log (nor);
 			}
 			if (idleTime >= nor) {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
+				Debug.Log(ani.GetInteger("ranAnim"));
 				ani.SetTrigger ("toIdleNormal");
-				nor = (int)toIdleTime+5;
+				nor = (int) toIdleTime + 5;
 			}
 		}
 
@@ -296,6 +302,7 @@ public class PlayerController : MonoBehaviour {
 
 	//被点击
 	void OnMouseDown(){
+		ChangeHappy (-iHappyValue);
 		DoIdle ();
 		if (Attrs [(int)enAttribute.Happy] >= 30) {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
@@ -305,7 +312,6 @@ public class PlayerController : MonoBehaviour {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
 			ani.SetTrigger ("toBeClickSad");
 		}
-		ChangeHappy (-iHappyValue);
 		//TODO:心情增加提示
 
 	}
@@ -316,10 +322,10 @@ public class PlayerController : MonoBehaviour {
 	public void OnEat(){
 		if (Attrs [(int)enAttribute.Happy] >= 30) {
 			if (Attrs [(int)enAttribute.Food] >= 1) {
-				DoIdle ();
-				ani.SetTrigger ("toEat");
 				ChangeHungry (-iFoodValue);
 				ChangeFood (-1);
+				DoIdle ();
+				ani.SetTrigger ("toEat");
 			} else {
 				//TODO:食物不足提示；
 			}

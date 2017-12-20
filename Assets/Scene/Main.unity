@@ -205,7 +205,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 26588067}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 933, y: 418.10892, z: 0}
+  m_LocalPosition: {x: 941, y: 418.1089, z: 0}
   m_LocalScale: {x: 1.0000029, y: 1.0000029, z: 1.0000029}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -213,8 +213,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -27, y: -121.99997}
-  m_SizeDelta: {x: 250, y: 90}
+  m_AnchoredPosition: {x: -19, y: -122}
+  m_SizeDelta: {x: 318.6, y: 90}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &26588069
 MonoBehaviour:
@@ -248,7 +248,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 000
+  m_Text: 000 / 100
 --- !u!222 &26588070
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -341,7 +341,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 270353416}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 633.28, y: 328.1089, z: 0}
+  m_LocalPosition: {x: 574.00006, y: 328.1089, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -349,7 +349,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -326.72, y: -212}
+  m_AnchoredPosition: {x: -385.99994, y: -212}
   m_SizeDelta: {x: 250, y: 90}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &270353418
@@ -378,7 +378,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 84
-    m_Alignment: 3
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -780,7 +780,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 449817046}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 633.28, y: 418.1089, z: 0}
+  m_LocalPosition: {x: 574.00006, y: 418.1089, z: 0}
   m_LocalScale: {x: 1.0000029, y: 1.0000029, z: 1.0000029}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -788,7 +788,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -326.72, y: -122}
+  m_AnchoredPosition: {x: -385.99994, y: -122}
   m_SizeDelta: {x: 250, y: 90}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &449817048
@@ -817,7 +817,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 84
-    m_Alignment: 3
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -1174,6 +1174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attrs: 
+  levelnum: {fileID: 1016645236}
   foodnum: {fileID: 1819805474}
   expnum: {fileID: 2077323474}
   hungrynum: {fileID: 26588069}
@@ -1208,7 +1209,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1016645234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 508.27588, y: 463.1089, z: 0}
+  m_LocalPosition: {x: 449, y: 463.10892, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -1216,7 +1217,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -451.72412, y: -77}
+  m_AnchoredPosition: {x: -511, y: -76.99997}
   m_SizeDelta: {x: 250, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1016645236
@@ -1245,13 +1246,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 108
-    m_Alignment: 3
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u6210\u957F\u503C"
+  m_Text: "\u7B49\u7EA7"
 --- !u!222 &1016645237
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1991,7 +1992,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2075049427
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2070,7 +2071,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2077323472}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 808, y: 463.1089, z: 0}
+  m_LocalPosition: {x: 781.68005, y: 462.2089, z: 0}
   m_LocalScale: {x: 1.0000029, y: 1.0000029, z: 1.0000029}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -2078,8 +2079,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -152, y: -77}
-  m_SizeDelta: {x: 250, y: 90}
+  m_AnchoredPosition: {x: -178.32, y: -77.9}
+  m_SizeDelta: {x: 318.55, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2077323474
 MonoBehaviour:
@@ -2107,13 +2108,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 108
-    m_Alignment: 3
+    m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 000
+  m_Text: 0 / 10
 --- !u!222 &2077323475
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2242,7 +2243,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2126420824}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 933, y: 328.10892, z: 0}
+  m_LocalPosition: {x: 941, y: 328.1089, z: 0}
   m_LocalScale: {x: 1.0000029, y: 1.0000029, z: 1.0000029}
   m_Children: []
   m_Father: {fileID: 1315614029}
@@ -2250,8 +2251,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -27, y: -211.99997}
-  m_SizeDelta: {x: 250, y: 90}
+  m_AnchoredPosition: {x: -19, y: -212}
+  m_SizeDelta: {x: 318.6, y: 90}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2126420826
 MonoBehaviour:
@@ -2285,7 +2286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 000
+  m_Text: 000 / 100
 --- !u!222 &2126420827
 CanvasRenderer:
   m_ObjectHideFlags: 0
