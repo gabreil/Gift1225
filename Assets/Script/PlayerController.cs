@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using System.Xml;
 using System.IO;
+using UnityEngine.EventSystems;
 
 enum enAttribute
 {
@@ -35,8 +36,8 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	float fUpdateinteval = 0.01f;			//饥饿心情的变化间隔；
-	float fUpdateintevalExp = 0.02f;		//成长的变化间隔；
+	float fUpdateinteval = 7.0f;			//饥饿心情的变化间隔；
+	float fUpdateintevalExp = 60.0f;		//成长的变化间隔；
 	float toIdleTime = 10.0f; 				//切换时段待机的时长；
 	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
 	int nor = 0;							//用于随机播放待机动作；
@@ -58,6 +59,7 @@ public class PlayerController : MonoBehaviour {
 	public Text ques;						//问题文本
 	public Text answ;						//答题文本
 	public InputField answfield;			//输入框
+	bool bAnswer = true;					//是否回答了问题
 
 	public bool bInit = false;
 
@@ -239,11 +241,11 @@ public class PlayerController : MonoBehaviour {
 			}
 			if (nor == 0) {
 				nor = UnityEngine.Random.Range (3, (int) toIdleTime + 3);
-				Debug.Log (nor);
+				//Debug.Log (nor);
 			}
 			if (idleTime >= nor) {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
-				Debug.Log(ani.GetInteger("ranAnim"));
+				//Debug.Log(ani.GetInteger("ranAnim"));
 				ani.SetTrigger ("toIdleNormal");
 				nor = (int) toIdleTime + 5;
 			}
@@ -302,18 +304,19 @@ public class PlayerController : MonoBehaviour {
 
 	//被点击
 	void OnMouseDown(){
-		ChangeHappy (-iHappyValue);
-		DoIdle ();
-		if (Attrs [(int)enAttribute.Happy] >= 30) {
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
-			ani.SetTrigger ("toBeClickHappy");
+		if(!IsPointerOverGameObject(Input.mousePosition))  {
+			ChangeHappy (-iHappyValue);
+			DoIdle ();
+			if (Attrs [(int)enAttribute.Happy] >= 30) {
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+				ani.SetTrigger ("toBeClickHappy");
+			}
+			if (Attrs [(int)enAttribute.Happy] < 30) {
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
+				ani.SetTrigger ("toBeClickSad");
+			}
+			//TODO:心情增加提示
 		}
-		if (Attrs [(int)enAttribute.Happy] < 30) {
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
-			ani.SetTrigger ("toBeClickSad");
-		}
-		//TODO:心情增加提示
-
 	}
 
 	//----------------------------------------------------------------------以下是用户行为之喂食和获取食物------------------------------------------------------------------------
@@ -326,6 +329,8 @@ public class PlayerController : MonoBehaviour {
 				ChangeFood (-1);
 				DoIdle ();
 				ani.SetTrigger ("toEat");
+				//饱食度增加提示；
+				//食物减少提示
 			} else {
 				//TODO:食物不足提示；
 			}
@@ -338,27 +343,40 @@ public class PlayerController : MonoBehaviour {
 	//获取食物
 	public void OnGetFood(){
 		qbg.gameObject.SetActive (true);
-		nQuesIdx = RandQuestion ();
-		string[] QandA = (string[])QAndAList[nQuesIdx];
-		ques.text = QandA [0];
-		answfield.text = "";
+		if (bAnswer) {
+			nQuesIdx = RandQuestion ();
+			string[] QandA = (string[])QAndAList[nQuesIdx];
+			ques.text = QandA [0];
+			answfield.text = "";
+			bAnswer = false;
+		}
+
+		GameController.gamecontroller.ChangeFish ();
 	}
 
 	//回答后处理
 	public void OnAnswer(){
-		qbg.gameObject.SetActive (false);
+		bAnswer = true;
+		CloseUI ();
 		DoIdle ();
 		if(IsAnswerRight(nQuesIdx,answ.text)){
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
 			ani.SetTrigger ("toRight");
-			Attrs [(int)enAttribute.Food]++;
+			ChangeFood (1);
 			//播放答题正确提示
 			//播放食物增加提示
 		}else{
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
 			ani.SetTrigger ("toWrong");
-			//播放错误提示
+			ChangeHappy (20);
+			//播放心情降低提示
+			//播放答题错误提示
 		}
+	}
+
+	//只是关闭界面
+	public void CloseUI(){
+		qbg.gameObject.SetActive (false);
 	}
 		
 		
@@ -455,4 +473,20 @@ public class PlayerController : MonoBehaviour {
 		fs.Close();
 		return true;
 	}
+
+	//-------------------------------------------------------------------以下是UI防穿透----------------------------------------------------
+
+	public bool IsPointerOverGameObject(Vector2 screenPosition)  
+	{  
+		//实例化点击事件  
+		PointerEventData eventDataCurrentPosition = new PointerEventData(UnityEngine.EventSystems.EventSystem.current);  
+		//将点击位置的屏幕坐标赋值给点击事件  
+		eventDataCurrentPosition.position = new Vector2(screenPosition.x, screenPosition.y);  
+
+		List<RaycastResult> results = new List<RaycastResult>();  
+		//向点击处发射射线  
+		EventSystem.current.RaycastAll(eventDataCurrentPosition, results);  
+
+		return results.Count > 0;  
+	} 
 }
