@@ -241,7 +241,7 @@ public class PlayerController : MonoBehaviour {
 			InitIdle (DateTime.Now);
 		}
 		if (idleTime < toIdleTime - 5) {
-			int nor = UnityEngine.Random.Range (0, 10000);
+			int nor = UnityEngine.Random.Range (0, 10);
 			if (nor <= 2) {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
 				ani.SetTrigger ("toIdleNormal");
