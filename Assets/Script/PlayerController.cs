@@ -26,10 +26,7 @@ public class PlayerController : MonoBehaviour {
 	};
 
 	// 问题与答案
-	public static string[,] QAndA = {
-		{"AAAAAAAAAAAAAA", "A"},
-		{"BBBBBBBBBBBBBB", "B"},
-	};
+	public static ArrayList QAndAList = new ArrayList();
 
 	public static PlayerController playercontroller;
 	public static Animator ani;
@@ -54,6 +51,8 @@ public class PlayerController : MonoBehaviour {
 	public Text hungrynum;					//饱食度UI  代码里为饥饿度，显示的时候用100去减
 	public Text happynum;					//心情值
 
+	public bool bInit = false;
+
 
 	//获得实例
 	void Awake(){
@@ -62,6 +61,7 @@ public class PlayerController : MonoBehaviour {
 
 	//初始化
 	void Start () {
+		LoadQuestion ();
 		ani = this.GetComponent<Animator> ();
 		targetPos = transform.position; 
 		InitIdle (DateTime.Now);
@@ -71,10 +71,14 @@ public class PlayerController : MonoBehaviour {
 		} else {
 			InitCalc ();
 		}
+		bInit = true;
 	}
 	
 	//Update
 	void Update () {
+		if (!bInit) {
+			return;
+		}
 		DateTime time_now = DateTime.Now; //取得现在的时间  
 		TimeSpan ts1 = time_now - saveTime; //判断差值
 		if (ts1.TotalMinutes >= fUpdateinteval) {
@@ -264,12 +268,13 @@ public class PlayerController : MonoBehaviour {
 
 	// 随机问题序号
 	public int RandQuestion() {
-		return UnityEngine.Random.Range (0, QAndA.Length);
+		return UnityEngine.Random.Range (0, QAndAList.Count);
 	}
 
 	// 判断回答是否正确
 	public bool IsAnswerRight(int nQueIdx, string strAnswer) {
-		if (QAndA[nQueIdx, 1] == strAnswer)
+		string[] QandA = (string[])QAndAList[nQueIdx];
+		if (QandA[1] == strAnswer)
 		{
 			return true;
 		}
@@ -306,7 +311,7 @@ public class PlayerController : MonoBehaviour {
 	// 保存数据到文件
 	public void SaveData()
 	{
-		string path = Application.dataPath + "/data.xml";
+		string path = Application.persistentDataPath + "/data.xml";
 		XmlDocument xml = new XmlDocument();
 		XmlElement root = xml.CreateElement("root");
 		xml.AppendChild(root);
@@ -326,7 +331,7 @@ public class PlayerController : MonoBehaviour {
 	// 文件读取数据
 	public bool LoadData()
 	{
-		string strFileName = Application.dataPath + "/data.xml";
+		string strFileName = Application.persistentDataPath + "/data.xml";
 		if (!File.Exists (strFileName))
 			return false;
 		XmlDocument xml = new XmlDocument();
@@ -342,6 +347,23 @@ public class PlayerController : MonoBehaviour {
 		}
 		return true;
 	}
-	
-	//
+
+	public bool LoadQuestion()
+	{
+		string strFileName = Application.dataPath + "/question.txt";
+		FileStream fs = new FileStream(strFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+		StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
+		//记录每次读取的一行记录
+		string strLine = "";
+		//记录每行记录中的各字段内容
+		string[] aryLine;
+		while ((strLine = sr.ReadLine()) != null)
+		{
+			aryLine = strLine.Split('\t');
+			QAndAList.Add (aryLine);
+		}
+		sr.Close();
+		fs.Close();
+		return true;
+	}
 }
