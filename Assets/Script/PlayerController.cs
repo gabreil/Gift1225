@@ -38,16 +38,18 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	private float fUpdateinteval = 0.3f;	//饥饿心情的变化间隔；
-	private float fUpdateintevalExp = 1.0f;	//成长的变化间隔；
+	float fUpdateinteval = 0.3f;	//饥饿心情的变化间隔；
+	float fUpdateintevalExp = 1.0f;	//成长的变化间隔；
+	float toIdleTime = 10.0f; //切换时段待机的时长；
+	float idleTime = 0.0f;
 
-	private int iFoodValue = 10;			//每次喂食的饥饿度变化；
-	private int iHappyValue = 10;			//每次点击的心情值变化；
+	int iFoodValue = 10;			//每次喂食的饥饿度变化；
+	int iHappyValue = 10;			//每次点击的心情值变化；
 
 
 	Vector3 targetPos;						//移动目标点
-	private float speed = 0.03f;			//移动速度
-	private bool bMoving = false;			//是否处于移动状态，避免移动状态下反复切换为自己
+	float speed = 0.03f;			//移动速度
+	bool bMoving = false;			//是否处于移动状态，避免移动状态下反复切换为自己
 
 	public Text foodnum;					//食物量UI
 	public Text expnum;						//成长值UI
@@ -89,6 +91,7 @@ public class PlayerController : MonoBehaviour {
 		}
 		UpdateWalk ();
 		UpdateUI ();
+		UpdateIdle ();
 
 	}
 
@@ -231,6 +234,21 @@ public class PlayerController : MonoBehaviour {
 		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]);
 	}
 
+	//刷新待机动作
+	void UpdateIdle(){
+		idleTime += Time.deltaTime;
+		if (idleTime >= toIdleTime) {
+			InitIdle (DateTime.Now);
+		}
+		if (idleTime < toIdleTime - 5) {
+			int nor = UnityEngine.Random.Range (0, 10000);
+			if (nor <= 2) {
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
+				ani.SetTrigger ("toIdleNormal");
+			}
+				
+		}
+	}
 	//初始化待机动作
 	void InitIdle(DateTime now){
 		ani.SetInteger ("iHour", now.Hour);
@@ -283,6 +301,7 @@ public class PlayerController : MonoBehaviour {
 		GetComponent<SpriteRenderer> ().flipX = false;
 		ani.SetTrigger ("toIdle");
 		bMoving = false;
+		idleTime = 0.0f;
 		Debug.Log ("idle");
 		//TODO:判断待机状态函数；
 	}
