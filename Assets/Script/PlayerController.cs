@@ -127,7 +127,8 @@ public class PlayerController : MonoBehaviour {
 		if(Attrs [(int)enAttribute.Hungry] >= 70) {
 			Attrs [(int)enAttribute.Exp] -= nExp;
 			if (Attrs [(int)enAttribute.Exp] < Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10){
-				Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
+				//Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
+				Attrs [(int)enAttribute.Level]--;
 			}
 		}
 		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 50) {
@@ -200,8 +201,7 @@ public class PlayerController : MonoBehaviour {
 		bMoving = false;
 		idleTime = 0.0f;
 		nor = 0;
-		Debug.Log ("idle");
-		//TODO:判断待机状态函数；
+		//Debug.Log ("idle");
 	}
 
 
@@ -255,7 +255,7 @@ public class PlayerController : MonoBehaviour {
 		bMoving = true;
 
 
-		Debug.Log ("Move");
+		//Debug.Log ("Move");
 	}
 
 	//刷新移动
