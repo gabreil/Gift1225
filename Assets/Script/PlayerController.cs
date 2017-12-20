@@ -38,10 +38,11 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	float fUpdateinteval = 0.3f;	//饥饿心情的变化间隔；
+	float fUpdateinteval = 0.1f;	//饥饿心情的变化间隔；
 	float fUpdateintevalExp = 1.0f;	//成长的变化间隔；
 	float toIdleTime = 10.0f; //切换时段待机的时长；
 	float idleTime = 0.0f;
+	int nor = 0;
 
 	int iFoodValue = 10;			//每次喂食的饥饿度变化；
 	int iHappyValue = 10;			//每次点击的心情值变化；
@@ -66,7 +67,7 @@ public class PlayerController : MonoBehaviour {
 	void Start () {
 		ani = this.GetComponent<Animator> ();
 		targetPos = transform.position; 
-		InitIdle (DateTime.Now);
+		idleTime = toIdleTime;
 		Attrs = new int[Enum.GetValues(typeof(enAttribute)).GetLength(0)];
 		if (!LoadData ()) {
 			InitAttr ();
@@ -119,19 +120,19 @@ public class PlayerController : MonoBehaviour {
 
 	//成长值变化及等级变化
 	void ChangeExp(int nExp){
-		if(Attrs [(int)enAttribute.Hungry] >= 80) {
+		if(Attrs [(int)enAttribute.Hungry] >= 70) {
 			Attrs [(int)enAttribute.Exp] -= nExp;
 			if (Attrs [(int)enAttribute.Exp] < Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10){
 				Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 80 && Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 50) {
 			Attrs [(int)enAttribute.Exp] += 2 * nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] + 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 80 && Attrs [(int)enAttribute.Happy] < 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] < 50) {
 			Attrs [(int)enAttribute.Exp] += nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
@@ -178,11 +179,11 @@ public class PlayerController : MonoBehaviour {
 	//被点击
 	void OnMouseDown(){
 		DoIdle ();
-		if (Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Happy] >= 30) {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
 			ani.SetTrigger ("toBeClickHappy");
 		}
-		if (Attrs [(int)enAttribute.Happy] < 50) {
+		if (Attrs [(int)enAttribute.Happy] < 30) {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
 			ani.SetTrigger ("toBeClickSad");
 		}
@@ -236,18 +237,32 @@ public class PlayerController : MonoBehaviour {
 
 	//刷新待机动作
 	void UpdateIdle(){
-		idleTime += Time.deltaTime;
-		if (idleTime >= toIdleTime) {
-			InitIdle (DateTime.Now);
+		if (Attrs [(int)enAttribute.Happy] < 30 && !ani.GetCurrentAnimatorStateInfo (0).IsTag ("sad")) {
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 2));
+			ani.SetTrigger ("toBeSad");
+			return;
 		}
-		if (idleTime < toIdleTime - 5) {
-			int nor = UnityEngine.Random.Range (0, 10);
-			if (nor <= 2) {
+		if (Attrs [(int)enAttribute.Hungry] >= 70 && !ani.GetCurrentAnimatorStateInfo (0).IsTag ("hungry")) {
+			ani.SetTrigger ("toBeHungry");
+			return;
+		}
+		if (ani.GetCurrentAnimatorStateInfo (0).IsTag ("idle")) {
+
+			idleTime += Time.deltaTime;
+			if (idleTime >= toIdleTime) {
+				InitIdle (DateTime.Now);
+				return;
+			}
+			if (nor == 0) {
+				nor = UnityEngine.Random.Range (3, (int)toIdleTime+5);
+			}
+			if (idleTime >= nor) {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
 				ani.SetTrigger ("toIdleNormal");
+				nor = (int)toIdleTime+5;
 			}
-				
 		}
+
 	}
 	//初始化待机动作
 	void InitIdle(DateTime now){
@@ -262,7 +277,7 @@ public class PlayerController : MonoBehaviour {
 
 	//喂食
 	public void OnEat(){
-		if (Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Happy] >= 30) {
 			if (Attrs [(int)enAttribute.Food] >= 1) {
 				DoIdle ();
 				ani.SetTrigger ("toEat");
@@ -276,6 +291,8 @@ public class PlayerController : MonoBehaviour {
 		}
 
 	}
+
+	//获取食物
 	public void OnGetFood(){
 		Attrs [(int)enAttribute.Food]++;
 	}
@@ -302,11 +319,10 @@ public class PlayerController : MonoBehaviour {
 		ani.SetTrigger ("toIdle");
 		bMoving = false;
 		idleTime = 0.0f;
+		nor = 0;
 		Debug.Log ("idle");
 		//TODO:判断待机状态函数；
 	}
-
-	//置为随机待机状态
 
 
 	// 初始化属性
