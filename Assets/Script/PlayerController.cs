@@ -35,16 +35,19 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	private float fUpdateinteval = 0.3f;	//饥饿心情的变化间隔；
-	private float fUpdateintevalExp = 1.0f;	//成长的变化间隔；
+	float fUpdateinteval = 0.1f;			//饥饿心情的变化间隔；
+	float fUpdateintevalExp = 1.0f;			//成长的变化间隔；
+	float toIdleTime = 10.0f; 				//切换时段待机的时长；
+	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
+	int nor = 0;							//用于随机播放待机动作；
 
-	private int iFoodValue = 10;			//每次喂食的饥饿度变化；
-	private int iHappyValue = 10;			//每次点击的心情值变化；
+	int iFoodValue = 10;					//每次喂食的饥饿度变化；
+	int iHappyValue = 10;					//每次点击的心情值变化；
 
 
 	Vector3 targetPos;						//移动目标点
-	private float speed = 0.03f;			//移动速度
-	private bool bMoving = false;			//是否处于移动状态，避免移动状态下反复切换为自己
+	float speed = 0.03f;					//移动速度
+	bool bMoving = false;					//是否处于移动状态，避免移动状态下反复切换为自己
 
 	public Text foodnum;					//食物量UI
 	public Text expnum;						//成长值UI
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour {
 		LoadQuestion ();
 		ani = this.GetComponent<Animator> ();
 		targetPos = transform.position; 
-		InitIdle (DateTime.Now);
+		idleTime = toIdleTime;
 		Attrs = new int[Enum.GetValues(typeof(enAttribute)).GetLength(0)];
 		if (!LoadData ()) {
 			InitAttr ();
@@ -93,8 +96,11 @@ public class PlayerController : MonoBehaviour {
 		}
 		UpdateWalk ();
 		UpdateUI ();
+		UpdateIdle ();
 
 	}
+
+	//----------------------------------------------------------------------以下是初始化属性，模拟程序关闭期间的属性变化------------------------------------------------------------------------
 
 	void InitCalc () {
 		DateTime time_now = DateTime.Now; //取得现在的时间  
@@ -118,21 +124,24 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	//----------------------------------------------------------------------以下是各属性变化及UI刷新------------------------------------------------------------------------
+
 	//成长值变化及等级变化
 	void ChangeExp(int nExp){
-		if(Attrs [(int)enAttribute.Hungry] >= 80) {
+		if(Attrs [(int)enAttribute.Hungry] >= 70) {
 			Attrs [(int)enAttribute.Exp] -= nExp;
 			if (Attrs [(int)enAttribute.Exp] < Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10){
-				Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
+				//Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
+				Attrs [(int)enAttribute.Level]--;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 80 && Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 50) {
 			Attrs [(int)enAttribute.Exp] += 2 * nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] + 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 80 && Attrs [(int)enAttribute.Happy] < 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] < 50) {
 			Attrs [(int)enAttribute.Exp] += nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
@@ -175,23 +184,68 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
+	//刷新UI
+	void UpdateUI() {
+		foodnum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Food]);
+		expnum.text = string.Format("{0:D4}", Attrs [(int)enAttribute.Exp]);
+		hungrynum.text = string.Format("{0:D3}", 100 - Attrs [(int)enAttribute.Hungry]);
+		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]);
+	}
 
-	//被点击
-	void OnMouseDown(){
-		DoIdle ();
-		if (Attrs [(int)enAttribute.Happy] >= 50) {
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
-			ani.SetTrigger ("toBeClickHappy");
+
+
+
+	//----------------------------------------------------------------------以下是待机状态相关------------------------------------------------------------------------
+
+	//置为初始待机状态（在移动、点击、答题、喂食行为时均先调用）
+	void DoIdle(){
+		StopMove ();
+		GetComponent<SpriteRenderer> ().flipX = false;
+		ani.SetTrigger ("toIdle");
+		bMoving = false;
+		idleTime = 0.0f;
+		nor = 0;
+		//Debug.Log ("idle");
+	}
+
+
+	//刷新待机动作
+	void UpdateIdle(){
+		if (Attrs [(int)enAttribute.Happy] < 30 && !ani.GetCurrentAnimatorStateInfo (0).IsTag ("sad")) {
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 2));
+			ani.SetTrigger ("toBeSad");
+			return;
 		}
-		if (Attrs [(int)enAttribute.Happy] < 50) {
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
-			ani.SetTrigger ("toBeClickSad");
+		if (Attrs [(int)enAttribute.Hungry] >= 70 && !ani.GetCurrentAnimatorStateInfo (0).IsTag ("hungry")) {
+			ani.SetTrigger ("toBeHungry");
+			return;
 		}
-		ChangeHappy (-iHappyValue);
-		//TODO:心情增加提示
+		if (ani.GetCurrentAnimatorStateInfo (0).IsTag ("idle")) {
+
+			idleTime += Time.deltaTime;
+			if (idleTime >= toIdleTime) {
+				InitIdle (DateTime.Now);
+				return;
+			}
+			if (nor == 0) {
+				nor = UnityEngine.Random.Range (3, (int)toIdleTime+5);
+			}
+			if (idleTime >= nor) {
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (1, 8));
+				ani.SetTrigger ("toIdleNormal");
+				nor = (int)toIdleTime+5;
+			}
+		}
 
 	}
+	//触发时间待机动作
+	void InitIdle(DateTime now){
+		ani.SetInteger ("iHour", now.Hour);
+		ani.SetTrigger ("toIdleTime");
+	} 
 		
+
+	//----------------------------------------------------------------------以下是用户行为之移动------------------------------------------------------------------------
 
 	//移动到某坐标
 	public void MoveToPos(Vector3 Vpos) {
@@ -205,12 +259,12 @@ public class PlayerController : MonoBehaviour {
 		bMoving = true;
 
 
-		Debug.Log ("Move");
+		//Debug.Log ("Move");
 	}
 
 	//刷新移动
 	void UpdateWalk() {
-		
+
 		Vector3 posoffset = targetPos - transform.position;
 		if (Math.Abs (posoffset.x) > 0.1 || Math.Abs (posoffset.y) > 0.1) {
 			posoffset.Normalize ();
@@ -227,28 +281,34 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 	}
-	//刷新UI
-	void UpdateUI() {
-		foodnum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Food]);
-		expnum.text = string.Format("{0:D4}", Attrs [(int)enAttribute.Exp]);
-		hungrynum.text = string.Format("{0:D3}", 100 - Attrs [(int)enAttribute.Hungry]);
-		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]);
-	}
-
-	//初始化待机动作
-	void InitIdle(DateTime now){
-		ani.SetInteger ("iHour", now.Hour);
-		ani.SetTrigger ("toIdleTime");
-	} 
-
 	//停止移动
 	void StopMove(){
 		targetPos = transform.position;
 	}
 
+	//----------------------------------------------------------------------以下是用户行为之点击------------------------------------------------------------------------
+
+	//被点击
+	void OnMouseDown(){
+		DoIdle ();
+		if (Attrs [(int)enAttribute.Happy] >= 30) {
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+			ani.SetTrigger ("toBeClickHappy");
+		}
+		if (Attrs [(int)enAttribute.Happy] < 30) {
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
+			ani.SetTrigger ("toBeClickSad");
+		}
+		ChangeHappy (-iHappyValue);
+		//TODO:心情增加提示
+
+	}
+
+	//----------------------------------------------------------------------以下是用户行为之喂食和获取食物------------------------------------------------------------------------
+
 	//喂食
 	public void OnEat(){
-		if (Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Happy] >= 30) {
 			if (Attrs [(int)enAttribute.Food] >= 1) {
 				DoIdle ();
 				ani.SetTrigger ("toEat");
@@ -262,8 +322,22 @@ public class PlayerController : MonoBehaviour {
 		}
 
 	}
+
+	//获取食物
 	public void OnGetFood(){
 		Attrs [(int)enAttribute.Food]++;
+		//弹出答题框
+		//回答后  关掉答题框
+		//if 正确 
+		//idle
+		//播放正确动作
+		//增加食物
+		//播放答题正确提示
+		//播放食物增加提示
+		//否则
+		//idle
+		//播放错误动作
+		//播放错误提示
 	}
 
 	// 随机问题序号
@@ -282,18 +356,8 @@ public class PlayerController : MonoBehaviour {
 	}
 
 
-	//置为待机状态（在任何变化状态时均先调用）
-	void DoIdle(){
-		StopMove ();
-		GetComponent<SpriteRenderer> ().flipX = false;
-		ani.SetTrigger ("toIdle");
-		bMoving = false;
-		Debug.Log ("idle");
-		//TODO:判断待机状态函数；
-	}
 
-	//置为随机待机状态
-
+	//-------------------------------------------------------------------以下是文件读取和初始化相关----------------------------------------------------
 
 	// 初始化属性
 	public void InitAttr()
