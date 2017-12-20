@@ -53,8 +53,14 @@ public class PlayerController : MonoBehaviour {
 	public Text expnum;						//成长值UI
 	public Text hungrynum;					//饱食度UI  代码里为饥饿度，显示的时候用100去减
 	public Text happynum;					//心情值
+	public Image qbg;
+	public Text ques;
+	public Text answ;
+	public InputField answfield;
 
 	public bool bInit = false;
+
+	public int nQuesIdx;
 
 
 	//获得实例
@@ -131,8 +137,8 @@ public class PlayerController : MonoBehaviour {
 		if(Attrs [(int)enAttribute.Hungry] >= 70) {
 			Attrs [(int)enAttribute.Exp] -= nExp;
 			if (Attrs [(int)enAttribute.Exp] < Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10){
-				//Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
-				Attrs [(int)enAttribute.Level]--;
+				Attrs [(int)enAttribute.Exp] = Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] - 1) / 2 * 10;
+				//Attrs [(int)enAttribute.Level]--;
 			}
 		}
 		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 50) {
@@ -325,20 +331,32 @@ public class PlayerController : MonoBehaviour {
 
 	//获取食物
 	public void OnGetFood(){
-		Attrs [(int)enAttribute.Food]++;
-		//弹出答题框
-		//回答后  关掉答题框
-		//if 正确 
-		//idle
-		//播放正确动作
-		//增加食物
-		//播放答题正确提示
-		//播放食物增加提示
-		//否则
-		//idle
-		//播放错误动作
-		//播放错误提示
+		qbg.gameObject.SetActive (true);
+		nQuesIdx = RandQuestion ();
+		string[] QandA = (string[])QAndAList[nQuesIdx];
+		ques.text = QandA [0];
+		answfield.text = "";
 	}
+
+	//回答后处理
+	public void OnAnswer(){
+		qbg.gameObject.SetActive (false);
+		DoIdle ();
+		if(IsAnswerRight(nQuesIdx,answ.text)){
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+			ani.SetTrigger ("toRight");
+			Attrs [(int)enAttribute.Food]++;
+			//播放答题正确提示
+			//播放食物增加提示
+		}else{
+			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+			ani.SetTrigger ("toWrong");
+			//播放错误提示
+		}
+	}
+		
+		
+
 
 	// 随机问题序号
 	public int RandQuestion() {
@@ -412,6 +430,7 @@ public class PlayerController : MonoBehaviour {
 		return true;
 	}
 
+	//加载问题
 	public bool LoadQuestion()
 	{
 		string strFileName = Application.dataPath + "/question.txt";
