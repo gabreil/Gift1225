@@ -47,7 +47,7 @@ public class GameController : MonoBehaviour {
 	public void ShowZT(string zttxt){
 		ztUI.SetActive (true);
 		ztTxt.text = zttxt;
-		ztUI.transform.position = Camera.main.WorldToScreenPoint (PlayerController.playercontroller.transform.position) + new Vector3 (-20.0f, 270.0f, 0.0f);
+		ztUI.transform.position = Camera.main.WorldToScreenPoint (PlayerController.playercontroller.transform.position) + new Vector3 (0.0f, 220.0f, 0.0f);
 	}
 
 	public void HideZT(){
