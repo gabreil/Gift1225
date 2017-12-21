@@ -55,15 +55,16 @@ public class PlayerController : MonoBehaviour {
 	public Text expnum;						//成长值UI
 	public Text hungrynum;					//饱食度UI  代码里为饥饿度，显示的时候用100去减
 	public Text happynum;					//心情值
+
+
 	public Image qbg;						//问答界面
 	public Text ques;						//问题文本
 	public Text answ;						//答题文本
 	public InputField answfield;			//输入框
+	public int nQuesIdx;					//问题序号
 	bool bAnswer = true;					//是否回答了问题
 
 	public bool bInit = false;
-
-	public int nQuesIdx;
 
 
 	//获得实例
@@ -144,13 +145,13 @@ public class PlayerController : MonoBehaviour {
 				//Attrs [(int)enAttribute.Level]--;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] >= 70) {
 			Attrs [(int)enAttribute.Exp] += 2 * nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] + 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
 			}
 		}
-		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] < 50) {
+		if (Attrs [(int)enAttribute.Hungry] < 70 && Attrs [(int)enAttribute.Happy] < 70) {
 			Attrs [(int)enAttribute.Exp] += nExp;
 			if (Attrs [(int)enAttribute.Exp] > Attrs [(int)enAttribute.Level] * (Attrs [(int)enAttribute.Level] + 1) / 2 * 10) {
 				Attrs [(int)enAttribute.Level]++;
