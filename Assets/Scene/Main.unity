@@ -433,6 +433,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ecb801cdbd8b7394486a48e9bc124091, type: 3}
   - {fileID: 21300000, guid: 49ef3f2c9ed460f499e8c87168fbe7f7, type: 3}
   fishimg: {fileID: 381536294}
+  txt_notice: {fileID: 1141835371645746, guid: 18440f6c50a196d4dbf37f15ad2d4670, type: 2}
 --- !u!4 &274874315
 Transform:
   m_ObjectHideFlags: 0
@@ -648,7 +649,7 @@ GameObject:
   - component: {fileID: 381536295}
   - component: {fileID: 381536294}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_fish
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -949,6 +950,39 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 449817046}
+--- !u!1 &503028633
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 503028634}
+  m_Layer: 5
+  m_Name: UI_Notice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &503028634
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 503028633}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1315614029}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &598440918
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,6 +1661,7 @@ RectTransform:
   - {fileID: 1206557479}
   - {fileID: 402243109}
   - {fileID: 2139280788}
+  - {fileID: 503028634}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1647,7 +1682,7 @@ GameObject:
   - component: {fileID: 1476241045}
   - component: {fileID: 1476241044}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Panel_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2064,7 +2099,7 @@ GameObject:
   - component: {fileID: 1999150867}
   - component: {fileID: 1999150866}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Btn_Answer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
