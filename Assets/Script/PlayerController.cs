@@ -315,7 +315,7 @@ public class PlayerController : MonoBehaviour {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
 				ani.SetTrigger ("toBeClickSad");
 			}
-			GameController.gamecontroller.ShowNotice ("心情 +" + iHappyValue.ToString);
+			GameController.gamecontroller.ShowNotice ("心情 +" + iHappyValue.ToString());
 		}
 	}
 
@@ -329,7 +329,7 @@ public class PlayerController : MonoBehaviour {
 				ChangeFood (-1);
 				DoIdle ();
 				ani.SetTrigger ("toEat");
-				GameController.gamecontroller.ShowNotice ("饱食度 +" + iFoodValue.ToString);
+				GameController.gamecontroller.ShowNotice ("饱食度 +" + iFoodValue.ToString());
 			} else {
 				GameController.gamecontroller.ShowNotice ("食物不足啦！！");
 			}
