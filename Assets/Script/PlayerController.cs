@@ -315,7 +315,7 @@ public class PlayerController : MonoBehaviour {
 				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 4));
 				ani.SetTrigger ("toBeClickSad");
 			}
-			//TODO:心情增加提示
+			GameController.gamecontroller.ShowNotice ("心情 +" + iHappyValue.ToString);
 		}
 	}
 
@@ -329,13 +329,12 @@ public class PlayerController : MonoBehaviour {
 				ChangeFood (-1);
 				DoIdle ();
 				ani.SetTrigger ("toEat");
-				//饱食度增加提示；
-				//食物减少提示
+				GameController.gamecontroller.ShowNotice ("饱食度 +" + iFoodValue.ToString);
 			} else {
-				//TODO:食物不足提示；
+				GameController.gamecontroller.ShowNotice ("食物不足啦！！");
 			}
 		}else{
-			//TODO:心情不好不想吃饭提示；
+			GameController.gamecontroller.ShowNotice ("不高兴！不吃饭！");
 		}
 
 	}
@@ -363,14 +362,12 @@ public class PlayerController : MonoBehaviour {
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
 			ani.SetTrigger ("toRight");
 			ChangeFood (1);
-			//播放答题正确提示
-			//播放食物增加提示
+			GameController.gamecontroller.ShowNotice ("回答正确！食物 +1");
 		}else{
 			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
 			ani.SetTrigger ("toWrong");
 			ChangeHappy (20);
-			//播放心情降低提示
-			//播放答题错误提示
+			GameController.gamecontroller.ShowNotice ("回答错误！心情 -20");
 		}
 	}
 

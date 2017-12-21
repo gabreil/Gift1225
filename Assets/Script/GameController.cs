@@ -35,7 +35,6 @@ public class GameController : MonoBehaviour {
 	public void ShowNotice(string noticetxt){
 		GameObject notice = Instantiate (txt_notice);
 		notice.transform.SetParent(GameObject.Find ("UI_Notice").transform);
-		//notice.transform.position = new Vector3 (0.0f, 0.0f, 0.0f);
 		notice.GetComponent<Text> ().text = noticetxt;
 		Debug.Log (notice.GetComponent<Text> ().text);
 	}
