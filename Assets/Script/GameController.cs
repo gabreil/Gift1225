@@ -12,6 +12,8 @@ public class GameController : MonoBehaviour {
 	public GameObject txt_notice;
 	public GameObject tipsUI;
 	public Text tipsTxt;
+	public GameObject ztUI;
+	public Text ztTxt;
 
 
 	void Awake(){
@@ -40,6 +42,18 @@ public class GameController : MonoBehaviour {
 		notice.transform.SetParent(GameObject.Find ("UI_Notice").transform);
 		notice.GetComponent<Text> ().text = noticetxt;
 	}
+
+	//显示状态
+	public void ShowZT(string zttxt){
+		ztUI.SetActive (true);
+		ztTxt.text = zttxt;
+		ztUI.transform.position = Camera.main.WorldToScreenPoint (PlayerController.playercontroller.transform.position) + new Vector3 (-20.0f, 270.0f, 0.0f);
+	}
+
+	public void HideZT(){
+		ztUI.SetActive (false);
+	}
+
 	//----------------------------------------------------------------------以下是TIPS相关------------------------------------------------------------------------
 
 

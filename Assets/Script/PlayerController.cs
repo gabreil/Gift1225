@@ -203,7 +203,10 @@ public class PlayerController : MonoBehaviour {
 		happynum.text = string.Format("{0:D3}", Attrs [(int)enAttribute.Happy]) + " / 100";
 	}
 
-
+	//显示状态
+	public void ShowZTP(string ztp){
+		GameController.gamecontroller.ShowZT (ztp);
+	}
 
 
 	//----------------------------------------------------------------------以下是待机状态相关------------------------------------------------------------------------
@@ -216,6 +219,7 @@ public class PlayerController : MonoBehaviour {
 		bMoving = false;
 		idleTime = 0.0f;
 		nor = 0;
+		GameController.gamecontroller.HideZT ();
 		//Debug.Log ("idle");
 	}
 
@@ -328,8 +332,8 @@ public class PlayerController : MonoBehaviour {
 			if (Attrs [(int)enAttribute.Food] >= 1) {
 				ChangeHungry (-iFoodValue);
 				ChangeFood (-1);
-				DoIdle ();
 				ani.SetTrigger ("toEat");
+				DoIdle ();
 				GameController.gamecontroller.ShowNotice ("饱食度 +" + iFoodValue.ToString());
 			} else {
 				GameController.gamecontroller.ShowNotice ("食物不足啦！！");
