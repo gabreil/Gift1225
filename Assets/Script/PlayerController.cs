@@ -401,6 +401,10 @@ public class PlayerController : MonoBehaviour {
 	// 判断回答是否正确
 	public bool IsAnswerRight(int nQueIdx, string strAnswer) {
 		string[] QandA = (string[])QAndAList[nQueIdx];
+		if (strAnswer == "我想初始化"){
+			InitAttr ();
+			return false;
+		}
 		if (QandA[1] == strAnswer)
 		{
 			return true;
