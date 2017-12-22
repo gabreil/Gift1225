@@ -42,8 +42,8 @@ public class PlayerController : MonoBehaviour {
 	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
 	int nor = 0;							//用于随机播放待机动作；
 
-	int iFoodValue = 5;						//每次喂食的饥饿度变化；
-	int iHappyValue = 5;					//每次点击的心情值变化；
+	int iFoodValue = 8;						//每次喂食的饥饿度变化；
+	int iHappyValue = 10;					//每次点击的心情值变化；
 
 
 	Vector3 targetPos;						//移动目标点
