@@ -314,7 +314,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			pos = Input.GetTouch(0).position;
 		} 
-		else 
+		else
 		{
 			pos = Input.mousePosition;
 		}
@@ -468,20 +468,15 @@ public class PlayerController : MonoBehaviour {
 	//加载问题
 	public bool LoadQuestion()
 	{
-		string strFileName = Application.dataPath + "/question.txt";
-		FileStream fs = new FileStream(strFileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-		StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default);
-		//记录每次读取的一行记录
-		string strLine = "";
-		//记录每行记录中的各字段内容
+		TextAsset textAsset = Resources.Load("question") as TextAsset;
+		string strAsset = textAsset.text;
+		string [] strLines = strAsset.Split (new char[]{'\n'});
 		string[] aryLine;
-		while ((strLine = sr.ReadLine()) != null)
+		for (int i = 0; i < strLines.Length - 1; i++) 
 		{
-			aryLine = strLine.Split('\t');
+			aryLine = strLines[i].Split('\t');
 			QAndAList.Add (aryLine);
 		}
-		sr.Close();
-		fs.Close();
 		return true;
 	}
 
