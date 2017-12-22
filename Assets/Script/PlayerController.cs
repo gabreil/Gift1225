@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour {
 		1,
 		0,
 		50,
-		10,
-		100,
+		0,
+		50,
 	};
 
 	// 问题与答案
