@@ -405,7 +405,7 @@ public class PlayerController : MonoBehaviour {
 			InitAttr ();
 			return false;
 		}
-		if (QandA[1] == strAnswer)
+		if (QandA[1] == strAnswer  + "\r" )
 		{
 			return true;
 		}
