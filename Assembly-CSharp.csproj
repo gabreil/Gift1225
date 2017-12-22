@@ -55,7 +55,7 @@
      <Compile Include="Assets\Script\GameController.cs" />
      <Compile Include="Assets\Script\NoticeDestroy.cs" />
      <Compile Include="Assets\Script\PlayerController.cs" />
-     <None Include="Assets\question.txt" />
+     <None Include="Assets\Resources\question.txt" />
  <Reference Include="UnityEngine.UI">
  <HintPath>F:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
