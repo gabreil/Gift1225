@@ -36,13 +36,13 @@ public class PlayerController : MonoBehaviour {
 
 	DateTime saveTime; 						//其它属性自然增减时间戳
 	DateTime saveTimeExp; 					//成长值自然增减时间戳
-	float fUpdateinteval = 7.0f;			//饥饿心情的变化间隔；
+	float fUpdateinteval = 8.0f;			//饥饿心情的变化间隔；
 	float fUpdateintevalExp = 60.0f;		//成长的变化间隔；
 	float toIdleTime = 10.0f; 				//切换时段待机的时长；
 	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
 	int nor = 0;							//用于随机播放待机动作；
 
-	int iFoodValue = 8;						//每次喂食的饥饿度变化；
+	int iFoodValue = 15;						//每次喂食的饥饿度变化；
 	int iHappyValue = 10;					//每次点击的心情值变化；
 
 
