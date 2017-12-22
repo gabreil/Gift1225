@@ -308,8 +308,17 @@ public class PlayerController : MonoBehaviour {
 	//----------------------------------------------------------------------以下是用户行为之点击------------------------------------------------------------------------
 
 	//被点击
-	void OnMouseDown(){
-		if(!IsPointerOverGameObject(Input.mousePosition))  {
+	void OnMouseDown() {
+		Vector3 pos;
+		if (Input.touchCount > 0) 
+		{
+			pos = Input.GetTouch(0).position;
+		} 
+		else 
+		{
+			pos = Input.mousePosition;
+		}
+		if(!IsPointerOverGameObject(pos))  {
 			ChangeHappy (-iHappyValue);
 			DoIdle ();
 			if (Attrs [(int)enAttribute.Happy] >= 30) {

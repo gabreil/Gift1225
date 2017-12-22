@@ -17,9 +17,18 @@ public class BGMover : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		if(!IsPointerOverGameObject(Input.mousePosition))  
+		Vector3 pos;
+		if (Input.touchCount > 0) 
+		{
+			pos = Input.GetTouch(0).position;
+		} 
+		else 
+		{
+			pos = Input.mousePosition;
+		}
+		if(!IsPointerOverGameObject(pos))  
 		{  
-			PlayerController.playercontroller.MoveToPos (Camera.main.ScreenToWorldPoint(Input.mousePosition));
+			PlayerController.playercontroller.MoveToPos (Camera.main.ScreenToWorldPoint(pos));
 		} 
 	}
 	
