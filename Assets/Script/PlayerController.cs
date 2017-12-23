@@ -405,7 +405,7 @@ public class PlayerController : MonoBehaviour {
 			InitAttr ();
 			return false;
 		}
-		if (QandA[1] == strAnswer  + "\r" )
+		if (QandA[1] == strAnswer)
 		{
 			return true;
 		}
@@ -442,7 +442,6 @@ public class PlayerController : MonoBehaviour {
 		{
 			string strName = Enum.GetName(typeof(enAttribute), i);
 			data.SetAttribute(strName, Convert.ToString(Attrs[i]));
-
 		}
 		data.SetAttribute("Time", saveTime.ToString());
 		data.SetAttribute("TimeExp", saveTimeExp.ToString());
@@ -481,7 +480,7 @@ public class PlayerController : MonoBehaviour {
 		else
 		{
 			TextAsset textAsset = Resources.Load("question") as TextAsset;
-			strLines = textAsset.text.Split (new char[]{'\n'});
+			strLines = textAsset.text.Split ("\r\n".ToCharArray());
 		}
 		string[] aryLine;
 		for (int i = 0; i < strLines.Length - 1; i++) 
