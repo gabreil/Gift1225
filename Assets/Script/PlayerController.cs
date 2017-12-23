@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour {
 
 	//初始化
 	void Start () {
-		LoadQuestion ();
+		StartCoroutine (DownloadQuestionFile ());
 		ani = this.GetComponent<Animator> ();
 		targetPos = transform.position; 
 		idleTime = toIdleTime;
@@ -472,16 +472,42 @@ public class PlayerController : MonoBehaviour {
 	//加载问题
 	public bool LoadQuestion()
 	{
-		TextAsset textAsset = Resources.Load("question") as TextAsset;
-		string strAsset = textAsset.text;
-		string [] strLines = strAsset.Split (new char[]{'\n'});
+		string strFileName = Application.persistentDataPath + "/question.txt";
+		string[] strLines;
+		if (File.Exists (strFileName)) 
+		{
+			strLines = File.ReadAllLines(strFileName);
+		} 
+		else
+		{
+			TextAsset textAsset = Resources.Load("question") as TextAsset;
+			strLines = textAsset.text.Split (new char[]{'\n'});
+		}
 		string[] aryLine;
 		for (int i = 0; i < strLines.Length - 1; i++) 
 		{
 			aryLine = strLines[i].Split('\t');
 			QAndAList.Add (aryLine);
 		}
-		return true;
+		return false;
+	}
+
+	public IEnumerator DownloadQuestionFile()
+	{
+		WWW www = new WWW("http://180.150.186.250/data/question.txt");
+		yield return www;
+		if (www.isDone)
+		{
+			string strFileName = Application.persistentDataPath + "/question.txt";
+			FileInfo file = new FileInfo(strFileName);
+			byte[] bytes = www.bytes;
+			Stream stream;
+			stream = file.Create();
+			stream.Write(bytes, 0, bytes.Length);
+			stream.Close();
+			stream.Dispose();
+			LoadQuestion ();
+		}
 	}
 
 	//-------------------------------------------------------------------以下是UI防穿透----------------------------------------------------
