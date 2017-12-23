@@ -22,8 +22,8 @@ public class PlayerController : MonoBehaviour {
 		1,
 		0,
 		50,
-		10,
-		100,
+		0,
+		50,
 	};
 
 	// 问题与答案
@@ -405,7 +405,7 @@ public class PlayerController : MonoBehaviour {
 			InitAttr ();
 			return false;
 		}
-		if (QandA[1] == strAnswer)
+		if (QandA[1] == strAnswer  + "\r" )
 		{
 			return true;
 		}
