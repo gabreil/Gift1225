@@ -493,7 +493,7 @@ public class PlayerController : MonoBehaviour {
 
 	public IEnumerator DownloadQuestionFile()
 	{
-		WWW www = new WWW("http://180.150.186.250/data/question.txt");
+		WWW www = new WWW("http://ttry.gz01.bdysite.com/question.txt");
 		yield return www;
 		if (www.isDone)
 		{
