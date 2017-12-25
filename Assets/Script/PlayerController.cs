@@ -19,8 +19,8 @@ enum enAttribute
 public class PlayerController : MonoBehaviour {
 	//属性初始化
 	static int[] InitData = {
-		1,
-		0,
+		5,
+		108,
 		50,
 		0,
 		50,
