@@ -19,10 +19,10 @@ enum enAttribute
 public class PlayerController : MonoBehaviour {
 	//属性初始化
 	static int[] InitData = {
-		5,
-		108,
-		50,
-		0,
+		7,
+		216,
+		33,
+		1,
 		50,
 	};
 
@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour {
 	float idleTime = 0.0f;					//用于判断当前停止操作的时间；
 	int nor = 0;							//用于随机播放待机动作；
 
-	int iFoodValue = 15;						//每次喂食的饥饿度变化；
+	int iFoodValue = 15;					//每次喂食的饥饿度变化；
 	int iHappyValue = 10;					//每次点击的心情值变化；
 
 
@@ -63,6 +63,9 @@ public class PlayerController : MonoBehaviour {
 	public InputField answfield;			//输入框
 	public int nQuesIdx;					//问题序号
 	bool bAnswer = true;					//是否回答了问题
+	public string trueAnswer;				//存正确答案
+	public string yourAnswer;				//存用户答案
+	public Text answernext;					//回答按钮文字
 
 	public bool bInit = false;
 
@@ -360,7 +363,10 @@ public class PlayerController : MonoBehaviour {
 			nQuesIdx = RandQuestion ();
 			string[] QandA = (string[])QAndAList[nQuesIdx];
 			ques.text = QandA [0];
+			trueAnswer = QandA [1];
 			answfield.text = "";
+			answfield.textComponent.color = Color.black;
+			answernext.text = "回答！";
 			bAnswer = false;
 		}
 
@@ -369,19 +375,27 @@ public class PlayerController : MonoBehaviour {
 
 	//回答后处理
 	public void OnAnswer(){
-		bAnswer = true;
-		CloseUI ();
-		DoIdle ();
-		if(IsAnswerRight(nQuesIdx,answ.text)){
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
-			ani.SetTrigger ("toRight");
-			ChangeFood (1);
-			GameController.gamecontroller.ShowNotice ("回答正确！食物 +1");
-		}else{
-			ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
-			ani.SetTrigger ("toWrong");
-			ChangeHappy (20);
-			GameController.gamecontroller.ShowNotice ("回答错误！心情 -20");
+		if (answernext.text == "下一题") {
+			bAnswer = true;
+			OnGetFood ();
+		} else {
+			CloseUI ();
+			DoIdle ();
+			if (IsAnswerRight (nQuesIdx, answ.text)) {
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+				ani.SetTrigger ("toRight");
+				ChangeFood (1);
+				GameController.gamecontroller.ShowNotice ("回答正确！食物 +1");
+				bAnswer = true;
+			} else {
+				yourAnswer = answ.text;
+				ani.SetInteger ("ranAnim", UnityEngine.Random.Range (0, 6));
+				ani.SetTrigger ("toWrong");
+				ChangeHappy (20);
+				GameController.gamecontroller.ShowNotice ("回答错误！心情 -20");
+				answfield.textComponent.color = Color.red;
+				answernext.text = "下一题";
+			}
 		}
 	}
 
@@ -389,13 +403,24 @@ public class PlayerController : MonoBehaviour {
 	public void CloseUI(){
 		qbg.gameObject.SetActive (false);
 	}
-		
-		
+
+	//显示答案
+	public void ShowAnswer(){
+		if (answernext.text == "下一题") {
+			if (answfield.text == yourAnswer) {
+				answfield.textComponent.color = Color.black;
+				answfield.text = trueAnswer;
+			} else {
+				answfield.textComponent.color = Color.red;
+				answfield.text = yourAnswer;
+			}
+		}
+	}
 
 
 	// 随机问题序号
 	public int RandQuestion() {
-		return UnityEngine.Random.Range (0, QAndAList.Count);
+		return UnityEngine.Random.Range (0, QAndAList.Count + 1);
 	}
 
 	// 判断回答是否正确

@@ -870,6 +870,11 @@ Prefab:
       propertyPath: answfield
       value: 
       objectReference: {fileID: 388561177}
+    - target: {fileID: 114933171224874432, guid: 86fdd94f72b6b294a908deab133471d4,
+        type: 2}
+      propertyPath: answernext
+      value: 
+      objectReference: {fileID: 598440920}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86fdd94f72b6b294a908deab133471d4, type: 2}
   m_IsPrefabParent: 0
@@ -883,6 +888,7 @@ GameObject:
   - component: {fileID: 381536293}
   - component: {fileID: 381536295}
   - component: {fileID: 381536294}
+  - component: {fileID: 381536296}
   m_Layer: 5
   m_Name: Img_fish
   m_TagString: Untagged
@@ -941,6 +947,36 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 381536292}
+--- !u!114 &381536296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 381536292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 811769817}
+          m_MethodName: ShowAnswer
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  delegates: []
 --- !u!1 &388561175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,7 +1422,7 @@ GameObject:
   - component: {fileID: 598440921}
   - component: {fileID: 598440920}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Txt_Answer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2187,8 +2223,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1315614025}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 960, y: 540, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 554, y: 277, z: 0}
+  m_LocalScale: {x: 0.57708335, y: 0.57708335, z: 0.57708335}
   m_Children:
   - {fileID: 1206557479}
   - {fileID: 402243109}
@@ -2997,7 +3033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2075049427
 RectTransform:
   m_ObjectHideFlags: 0
